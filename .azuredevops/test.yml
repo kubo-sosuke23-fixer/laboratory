@@ -1,0 +1,19 @@
+trigger: none
+pr: none
+
+pool:
+  vmImage: ubuntu-latest
+
+parameters:
+  - name: connection
+    type: string
+
+steps:
+  - task: AzureCLI@2
+    inputs:
+      azureSubsription: ${{ parameters.connection }}
+      scriptType: pscore
+      sctiptLocation: inlineScript
+      inlineScript: |
+
+        az account show

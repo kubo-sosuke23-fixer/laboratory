@@ -1,0 +1,15 @@
+trigger: none
+pr: none
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  - name: connections
+    value: "test,test,test,test,test"
+
+steps:
+  - ${{ each connection in split(variables.connections, ',')}}:
+      - template: ./test.yml
+        parameters:
+          connection: ${{ connection }}
