@@ -5,14 +5,12 @@ pool:
   vmImage: ubuntu-latest
 
 variables:
-  - name: connections
-    value: "test,test,test,test,test"
   - name: connectionlist
-    value: >
+    value: >-
       test
-      test
-      test
-      test
+      test1
+      test2
+      test3
 
 steps:
   - ${{ each connection in split(variables.connectionlist, ' ')}}:
