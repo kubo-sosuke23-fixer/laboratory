@@ -14,7 +14,7 @@ variables:
 
 jobs:
   - ${{ each connection in split(variables.connectionlist, ' ')}}:
-      - job: Construct
+      - job: Job_${{ connection }}
         steps:
           - template: ./test.yml
             parameters:
