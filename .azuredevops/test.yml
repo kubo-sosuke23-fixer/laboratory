@@ -18,11 +18,3 @@ steps:
         subscriptionId=$(az account show --query id -o tsv)
 
         echo $subscriptionId
-
-        a = "a,
-             b,
-             c,
-             d,
-             e"
-
-        echo $a

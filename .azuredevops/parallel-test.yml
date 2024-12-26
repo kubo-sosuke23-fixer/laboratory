@@ -7,9 +7,15 @@ pool:
 variables:
   - name: connections
     value: "test,test,test,test,test"
+  - name: connectionlist
+    value: >
+      test1
+      test2
+      test3
+      test4
 
 steps:
-  - ${{ each connection in split(variables.connections, ',')}}:
+  - ${{ each connection in split(variables.connectionlist, ' ')}}:
       - template: ./test.yml
         parameters:
           connection: ${{ connection }}
