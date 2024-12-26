@@ -3,9 +3,10 @@ parameters:
     type: string
 
 steps:
+  - sctipt: echo ${{ parameters.connection }}
   - task: AzureCLI@2
     inputs:
-      azureSubsription: ${{ parameters.connection }}
+      connectedServiceNameARM: ${{ parameters.connection }}
       failOnStandardError: false
       scriptType: bash
       scriptLocation: inlineScript
