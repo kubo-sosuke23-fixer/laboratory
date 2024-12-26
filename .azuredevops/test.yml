@@ -3,7 +3,7 @@ parameters:
     type: string
 
 steps:
-  - sctipt: echo ${{ parameters.connection }}
+  - script: echo ${{ parameters.connection }}
   - task: AzureCLI@2
     inputs:
       connectedServiceNameARM: ${{ parameters.connection }}
