@@ -4,6 +4,20 @@ pr: none
 pool:
   vmImage: ubuntu-latest
 
+parameters:
+  - name: test
+    type: boolean
+    default: false
+  - name: test1
+    type: boolean
+    default: false
+  - name: test2
+    type: boolean
+    default: false
+  - name: test3
+    type: boolean
+    default: false
+
 variables:
   - name: connectionlist
     value: >-
@@ -15,6 +29,7 @@ variables:
 jobs:
   - ${{ each connection in split(variables.connectionlist, ' ')}}:
       - job: Job_${{ connection }}
+        condition: eq(parameters[connection], true)
         steps:
           - template: ./test.yml
             parameters:
