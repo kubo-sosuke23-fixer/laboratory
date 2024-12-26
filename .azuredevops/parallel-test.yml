@@ -12,8 +12,10 @@ variables:
       test2
       test3
 
-steps:
+jobs:
   - ${{ each connection in split(variables.connectionlist, ' ')}}:
-      - template: ./test.yml
-        parameters:
-          connection: ${{ connection }}
+      - job: Construct
+        steps:
+          - template: ./test.yml
+            parameters:
+              connection: ${{ connection }}
