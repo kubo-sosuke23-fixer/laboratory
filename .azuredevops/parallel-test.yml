@@ -9,10 +9,10 @@ variables:
     value: "test,test,test,test,test"
   - name: connectionlist
     value: >
-      test1
-      test2
-      test3
-      test4
+      test
+      test
+      test
+      test
 
 steps:
   - ${{ each connection in split(variables.connectionlist, ' ')}}:
