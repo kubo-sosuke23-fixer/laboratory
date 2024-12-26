@@ -27,14 +27,9 @@ variables:
       test3
 
 jobs:
-  - ${{ each connection in concat(
-      parameters.test  == true  ? join(['test'], '')  : join([], ''),
-      parameters.test1 == true  ? join(['test1'], '') : join([], ''),
-      parameters.test2 == true  ? join(['test2'], '') : join([], ''),
-      parameters.test3 == true  ? join(['test3'], '') : join([], '')
-    ) }}:
+  - ${{ each connection in split(variables.connectionlist, ' ')}}:
       - job: Job_${{ connection }}
-        condition: eq(${{ parameters.connection }}, true)
+        condition: eq(${{ parameters[connection] }}, true)
         steps:
           - template: ./test.yml
             parameters:
