@@ -6,8 +6,14 @@ steps:
   - task: AzureCLI@2
     inputs:
       azureSubsription: ${{ parameters.connection }}
-      scriptType: pscore
-      sctiptLocation: inlineScript
+      failOnStandardError: false
+      scriptType: bash
+      scriptLocation: inlineScript
+      addSpnToEnvironment: true
       inlineScript: |
+        set -e
 
-        az account show
+        # サービスコネクションの情報からSubscriptionName SubscriptionIdを取得
+        subscriptionId=$(az account show --query id -o tsv)
+
+        echo $subscriptionId
