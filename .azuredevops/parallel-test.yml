@@ -29,7 +29,7 @@ variables:
 jobs:
   - ${{ each connection in split(variables.connectionlist, ' ')}}:
       - job: Job_${{ connection }}
-        condition: eq(${{ parameters.${{ connection }} }}, true)
+        condition: eq(${{ parameters.connection }}, true)
         steps:
           - template: ./test.yml
             parameters:
