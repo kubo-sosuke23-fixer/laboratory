@@ -18,3 +18,7 @@ steps:
         subscriptionId=$(az account show --query id -o tsv)
 
         echo $subscriptionId
+
+        variables=$(TEST_VARIABLES)
+
+        echo $variables

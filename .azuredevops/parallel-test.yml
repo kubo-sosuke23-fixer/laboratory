@@ -25,11 +25,14 @@ variables:
       test1
       test2
       test3
+  - name:
 
 jobs:
   - ${{ each connection in split(variables.connectionlist, ' ')}}:
       - job: Job_${{ connection }}
         condition: eq(${{ parameters[connection] }}, true)
+        variables:
+          - group: $(${{ connection }})
         steps:
           - template: ./test.yml
             parameters:
