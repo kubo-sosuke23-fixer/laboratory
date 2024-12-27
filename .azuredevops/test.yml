@@ -23,6 +23,6 @@ steps:
 
         echo $variables
 
-        truefalse=${{ variable.v2Check }}
+        truefalse=${{ variables.v2Check }}
 
         echo $truefalse
