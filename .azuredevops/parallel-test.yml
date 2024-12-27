@@ -19,13 +19,13 @@ parameters:
     default: false
 
 variables:
+  - group: VARIABLES_VALUES
   - name: connectionlist
     value: >-
       test
       test1
       test2
       test3
-  - name:
 
 jobs:
   - ${{ each connection in split(variables.connectionlist, ' ')}}:
