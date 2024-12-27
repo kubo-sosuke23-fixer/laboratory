@@ -23,6 +23,8 @@ steps:
 
         echo $variables
 
-        truefalse=${{ variables.v2Check }}
-
-        echo $truefalse
+        if [ ${{ variables.v2Check }} -eq true ]; then
+          echo truedesu
+        else [ ${{ variables.v2Check }} -eq false ]; then
+          echo falsedesu
+        fi
