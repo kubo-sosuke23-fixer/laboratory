@@ -25,6 +25,6 @@ steps:
 
         if [ ${{ variables.v2Check }} -eq true ]; then
           echo truedesu
-        else [ ${{ variables.v2Check }} -eq false ]; then
+        else [ ${{ variables.v2Check }} -eq false ];
           echo falsedesu
         fi
