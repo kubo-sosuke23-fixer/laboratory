@@ -23,8 +23,7 @@ steps:
 
         echo $variables
 
-        if [ ${{ variables.v2Check }} == true ]; then
-          echo truedesu
-        else
-          echo falsedesu
-        fi
+  - ${{ if eq(variables.v2Check, true) }}:
+      - script: echo "true"
+  - ${{ else }}:
+      - script: echo "false"
