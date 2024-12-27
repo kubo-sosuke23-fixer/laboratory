@@ -42,7 +42,10 @@ jobs:
         variables:
           - group: ${{ variables[connection] }}
           - name: v2Check
-            value: ${{ if or(eq(connection, 'test'), eq(connection, 'test2')) }}true${{ else }}false${{ end }}
+            ${{ if eq(variables[connection], 'test') }}
+              value: false
+            ${{ else }}
+              value: true
         steps:
           - template: ./test.yml
             parameters:
