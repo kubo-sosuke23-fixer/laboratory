@@ -22,3 +22,7 @@ steps:
         variables=$(TEST_VARIABLES)
 
         echo $variables
+
+        truefalse=variable.v2Check
+
+        echo $truefalse
