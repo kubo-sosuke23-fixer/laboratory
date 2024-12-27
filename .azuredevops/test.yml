@@ -23,8 +23,8 @@ steps:
 
         echo $variables
 
-        if [ ${{ variables.v2Check }} -eq true ]; then
+        if [ ${{ variables.v2Check }} == true ]; then
           echo truedesu
-        else [ ${{ variables.v2Check }} -eq false ];
+        else
           echo falsedesu
         fi
