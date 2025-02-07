@@ -1,3 +1,5 @@
 .vscode
 *.tfvars
+*.tfstate*
 override.tf
+.terraform*
