@@ -8,89 +8,79 @@ parameters:
   - name: serviceConnection
     type: string
 
-  - name: toAcrName
+  - name: acrName
     type: string
 
   - name: vaultName
     type: string
 
-  - name: isEnabled
-    default: true
-    type: boolean
+  - name: storageName
+    type: string
 
 steps:
   - task: PowerShell@2
-    displayName: Set Pipeline Host's IP Address
-    condition: and(succeeded(), ${{ parameters.isEnabled }})
+    displayName: "Set Pipeline Host's IP Address"
     inputs:
       targetType: inline
-      script: |
-        # 事前にファイアーウォールを設定しているため一時的にPipelineのホストのIPを穴あけする必要があり、
-        # 処理簡略化のためホストのIPを環境変数に登録しておく
-        
+      script: |        
         $ip = @(Invoke-WebRequest http://ifconfig.me/ip).Content
 
         Write-Host "##vso[task.setvariable variable=PIPELINE_HOST_IP_ADDRESS;]${ip}"
         Write-Host "Pipeline host's ip: name = PIPELINE_HOST_IP_ADDRESS, ip address = $ip"
 
+  # Container Registry
   - task: AzureCLI@2
-    displayName: "Allowing the host machine's IP to access the Container Registry"
-    condition: and(succeeded(), ${{ parameters.isEnabled }})
+    displayName: "Add the host machine's IP to access the Container Registry"
     inputs:
       azureSubscription: ${{ parameters.serviceConnection }}
       scriptType: pscore
       scriptLocation: inlineScript
       inlineScript: |
-        # ファイアーウォールでimportをブロックされないために一時的にPipelineのホストのIPアドレスを穴あけ
-
-        az acr network-rule add -n ${{ parameters.toAcrName }} --ip-address "$(PIPELINE_HOST_IP_ADDRESS)"
+        az acr network-rule add -n ${{ parameters.acrName }} --ip-address "$(PIPELINE_HOST_IP_ADDRESS)"
 
   - task: AzureCLI@2
-    displayName: "Unallowing the host machine's IP to access the Container Registry"
-    condition: and(succeeded(), ${{ parameters.isEnabled }})
+    displayName: "Delete the host machine's IP to access the Container Registry"
     inputs:
       azureSubscription: ${{ parameters.serviceConnection }}
       scriptType: pscore
       scriptLocation: inlineScript
       inlineScript: |
-        # 追加したファイヤーウォールの穴あけの削除
+        az acr network-rule remove -n ${{ parameters.acrName }} --ip-address "$(PIPELINE_HOST_IP_ADDRESS)"
 
-        az acr network-rule remove -n ${{ parameters.toAcrName }} --ip-address "$(PIPELINE_HOST_IP_ADDRESS)"
-
-  - task: PowerShell@2
-    displayName: Set Pipeline Host's IP Address
-    condition: and(succeeded(), ${{ parameters.isEnabled }})
-    inputs:
-      targetType: inline
-      script: |
-        # 事前にファイアーウォールを設定しているため一時的にPipelineのホストのIPを穴あけする必要があり、
-        # 処理簡略化のためホストのIPを環境変数に登録しておく
-        
-        $ip = @(Invoke-WebRequest http://ifconfig.me/ip).Content
-
-        Write-Host "##vso[task.setvariable variable=PIPELINE_HOST_IP_ADDRESS;]${ip}"
-        Write-Host "Pipeline host's ip: name = PIPELINE_HOST_IP_ADDRESS, ip address = $ip"
-
+  # Key Vault
   - task: AzureCLI@2
-    displayName: "Allowing the host machine's IP to access the Container Registry"
-    condition: and(succeeded(), ${{ parameters.isEnabled }})
+    displayName: "Add the host machine's IP to access the Key Vault"
     inputs:
       azureSubscription: ${{ parameters.serviceConnection }}
       scriptType: pscore
       scriptLocation: inlineScript
       inlineScript: |
-        # ファイアーウォールでimportをブロックされないために一時的にPipelineのホストのIPアドレスを穴あけ
-
         az keyvault network-rule add --name ${{ parameters.vaultName }} --ip-address "$(PIPELINE_HOST_IP_ADDRESS)"
 
   - task: AzureCLI@2
-    displayName: "Unallowing the host machine's IP to access the Container Registry"
-    condition: and(succeeded(), ${{ parameters.isEnabled }})
+    displayName: "Delete the host machine's IP to access the Key Vault"
     inputs:
       azureSubscription: ${{ parameters.serviceConnection }}
       scriptType: pscore
       scriptLocation: inlineScript
       inlineScript: |
-        # 追加したファイヤーウォールの穴あけの削除
-
         az keyvault network-rule remove --name ${{ parameters.vaultName }} --ip-address "$(PIPELINE_HOST_IP_ADDRESS)"
+
+  # Storage Account
+  - task: AzureCLI@2
+    displayName: "Allowing the host machine's IP to access the Storage Account"
+    inputs:
+      azureSubscription: ${{ parameters.serviceConnection }}
+      scriptType: pscore
+      scriptLocation: inlineScript
+      inlineScript: |
+        az storage account network-rule add --account-name ${{ parameters.storageName }} --ip-address "$(PIPELINE_HOST_IP_ADDRESS)"
+
+  - task: AzureCLI@2
+    displayName: "Unallowing the host machine's IP to access the Storage Account"
+    inputs:
+      azureSubscription: ${{ parameters.serviceConnection }}
+      scriptType: pscore
+      scriptLocation: inlineScript
+      inlineScript: |
+        az storage account network-rule remove -account-name ${{ parameters.storageName }} --ip-address "$(PIPELINE_HOST_IP_ADDRESS)"
